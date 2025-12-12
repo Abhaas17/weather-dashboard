@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f0f0f0;
+        }
+        nav {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            background: #2c3e50;
+            padding: 1rem 2rem;
+            z-index: 1000;
+            box-shadow: 0 2px 5px #ccc;
+        }
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0 auto;
+            max-width: 1200px;
+        }
+        .logo {
+            font-size: 1.5rem;
+            color: #f39c12;
+            font-weight: bold;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #E0E0E0;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .nav-links a:hover {
+            color: #F4E04D;
+        }
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: #E0E0E0;
+            transition: 0.3s;
+        }
+        .search-section {
+            margin-top: 80px;
+            padding: 4rem 2rem 2rem;
+            text-align: center;
+        }
+        .search-section h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .search-container input {
+            flex: 1;
+            min-width: 250px;
+            padding: 1rem;
+            font-size: 1rem;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+        }
+        .search-container button {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .search-container button:hover {
+            background: #2980b9;
+        }
+        .weather-section {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: none;
+        }
+        .weather-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .weather-main {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .weather-icon {
+            font-size: 120px;
+        }
+        .weather-info h2 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        .weather-info .date {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        .temperature {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        .description {
+            font-size: 1.5rem;
+            color: #666;
+            text-transform: capitalize;
+        }
+        .weather-details {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .detail-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+        .detail-item h3 {
+            color: #555;
+            font-size: 1rem;
+            font-weight: normal;
+            margin: 0;
+        }     
+        .detail-item p {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        } 
+        .about-section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .about-content {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .about-content h2 {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+        }
+        .about-content p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        .about-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }  
+        .social-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        .social-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+        .social-links a:hover {
+            color: #3498db;
+        }
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .footer-links a:hover {
+            color: #3498db;
+        }
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #3498db;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+        .back-to-top:hover {
+            background: #2980b9;
+        }
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                left: -100%;  
+                top: 70px;  
+                flex-direction: column;
+                background: #2c3e50;
+                width: 100%;
+                text-align: center;
+                transition: left 0.3s ease;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+                padding: 2rem 0;
+            }
+            .nav-links.active {
+                left: 0;
+            }
+            .nav-links li {
+                margin: 1.5rem 0;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .search-section h1 {
+                font-size: 2rem;
+            }
+            .weather-main {
+                flex-direction: column;
+                text-align: center;
+            }
+            .temperature {
+                font-size: 3rem;
+            }
+        }
+        .error-message {
+            color: #c0392b;
+            background: #fadbd8;
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid #e74c3c;
+            margin-top: 1rem;
+            text-align: center;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            display: none;
+        }
+        .weather-section.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">⛅ WeatherApp</div>
+            <ul class="nav-links">
+                <li><a href="#search">Search</a></li>
+                <li><a href="#weather">Weather</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#footer">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+    <section id="search" class="search-section">
+        <h1>🌤️ Check Weather Anywhere</h1>
+        <div class="search-container">
+            <input type="text" id="city" placeholder="Enter a city name...">
+            <button id="search-button">Search</button>
+        </div>
+        <div class="error-message" id="error-message"></div>
+    </section>
+    <section id="weather" class="weather-section">
+        <div class="weather-card">
+            <div class="weather-main">
+                <div class="weather-icon">☀️</div>
+                <div class="weather-info">
+                    <h2>London, United Kingdom</h2>
+                    <p class="date">Wednesday, December 4, 2024</p>
+                    <div class="temperature">25°C</div>
+                    <div class="description">Sunny and Clear</div>
+                </div>
+            </div>
+            <div class="weather-details">
+                <div class="detail-item">
+                    <h3>💧 Humidity</h3>
+                    <p>65%</p>
+                </div>
+                <div class="detail-item">
+                    <h3>💨 Wind Speed</h3>
+                    <p>15 km/h</p>
+                </div>
+                <div class="detail-item">
+                    <h3>🌡️ Feels Like</h3>
+                    <p>23°C</p>
+                </div>
+                <div class="detail-item">
+                    <h3>🔽 Pressure</h3>
+                    <p>1013 mb</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="about" class="about-section">
+        <div class="about-content">
+            <div class="about-icon">🌍</div>
+            <h2>About This Application</h2>
+            <p>
+                This Weather Dashboard provides real-time weather information for cities around the world. 
+                Built with HTML, CSS, and JavaScript, it uses the WeatherAPI to fetch current weather data 
+                including temperature, humidity, wind speed, and atmospheric pressure.
+            </p>
+            <p>
+                Perfect for planning your day, checking conditions before travel, or just staying informed 
+                about the weather in your favorite locations around the globe.
+            </p>
+        </div>
+    </section>
+    <footer id="footer">
+        <div class="footer-content">
+            <div class="social-links">
+                <a href="https://github.com" target="_blank">GitHub</a>
+                <a href="https://linkedin.com" target="_blank">LinkedIn</a>
+                <a href="https://twitter.com" target="_blank">Twitter</a>                
+            </div>
+            <div class="footer-links">
+                <a href="#" target="_blank">Terms & Conditions</a>
+                <a href="#" target="_blank">Privacy Policy</a>
+                <a href="#" target="_blank">Copyright Info</a>
+            </div>
+            <p>&copy; 2025 Weather Dashboard. All rights reserved.</p>
+            <p>Developed by Abhaas Gupta</p>
+
+        </div>
+    </footer>
+    <button class="back-to-top">↑</button>
+<script>
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navLinks.classList.toggle('active');
+    })
+    const navItems = document.querySelectorAll('.nav-links a');
+    for (let i = 0; i < navItems.length; i++) {
+        navItems[i].addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navLinks.classList.remove('active');
+        })
+    }
+    const backToTopBtn = document.querySelector('.back-to-top');
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    })
+    for(let j = 0; j < navItems.length; j++) {
+        navItems[j].addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = navItems[j].getAttribute('href');
+            const target = document.querySelector(targetId);
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        })
+    }
+    const API_KEY = '72da6e52fe014002911181834250412';
+    const city = document.querySelector('#city');
+    const searchbtn = document.querySelector('#search-button');
+    const error = document.querySelector('#error-message');
+    const weatherSection = document.querySelector('.weather-section');
+    searchbtn.addEventListener('click', async () => {
+        const cityname = city.value.trim();
+        error.textContent = '';
+        error.style.display = 'none';
+        if (cityname.length === 0) {
+            error.textContent = "⚠️ Please type a city name!";
+            error.style.display = 'block';
+            weatherSection.classList.remove('show');
+            return;
+        }
+        try {
+            const url = `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${cityname}`;
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('⚠️ City not found');
+            }
+            const data = await response.json();
+            addToSearchHistory(data.location.name);
+            document.querySelector('.weather-info h2').textContent = data.location.name + ', ' + data.location.country;
+            document.querySelector('.temperature').textContent = data.current.temp_c + '°C';
+            document.querySelector('.description').textContent = data.current.condition.text;
+            const condition = data.current.condition.text.toLowerCase();
+            let emoji = '🌤️';
+            if (condition.includes('sunny') || condition.includes('clear')) {
+                emoji = '☀️';
+            }
+            if (condition.includes('cloud')) {
+                emoji = '☁️';
+            }
+            if (condition.includes('rain')) {
+                emoji = '🌧️';
+            }
+            if (condition.includes('snow')) {
+                emoji = '❄️';
+            }
+            if (condition.includes('sleet') || condition.includes('ice')) {
+                emoji = '🌨️';
+            }
+            if (condition.includes('night') || condition.includes('clear')) {
+                if (data.current.is_day === 0) {
+                    emoji = '🌙';
+                }
+            }
+            if (condition.includes('overcast')) {
+                emoji = '☁️';
+            }
+            if (condition.includes('mist') || condition.includes('fog')) {
+                emoji = '🌫️';
+            }
+            if (condition.includes('thunder') || condition.includes('storm')) {
+                emoji = '⛈️';
+            }
+            document.querySelector('.weather-icon').textContent = emoji;
+            const date = new Date(data.location.localtime);
+            document.querySelector('.date').textContent = date.toLocaleDateString('en-US', {
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric'
+            })
+            const detailValues = document.querySelectorAll('.detail-item p');
+            detailValues[0].textContent = data.current.humidity + '%';
+            detailValues[1].textContent = data.current.wind_kph + ' km/h';
+            detailValues[2].textContent = data.current.feelslike_c + '°C';
+            detailValues[3].textContent = data.current.pressure_mb + ' mb';
+            weatherSection.classList.add('show');
+        }
+        catch(err) {
+            error.textContent = '⚠️ City not found. Please try again!';
+            error.style.display = 'block';
+        }
+    })
+    city.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+            searchbtn.click();
+        }
+    })
+    function getSearchHistory() {
+        const history = localStorage.getItem('searchHistory');
+        return history ? JSON.parse(history) : [];
+    }
+    function saveSearchHistory(history) {
+        localStorage.setItem('searchHistory', JSON.stringify(history));
+    }
+    function displaySearchHistory() {
+        const history = getSearchHistory();
+        console.log('Search History:', history);
+    }
+    function addToSearchHistory(cityName) {
+        let history = getSearchHistory();
+        const existingIndex = history.indexOf(cityName);
+         if (existingIndex !== -1) {
+            history.splice(existingIndex, 1);
+        }
+        history.unshift(cityName);
+        if (history.length > 5) {
+            history.pop(); 
+        }
+        saveSearchHistory(history);
+        displaySearchHistory();
+    }
+</script>
+</body>
+</html>
