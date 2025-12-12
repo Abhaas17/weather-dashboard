@@ -311,6 +311,39 @@
         .weather-section.show {
             display: block;
         }
+        .search-history-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;      
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+        .search-history-container h3 {
+            color: #2c3e50;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+        #history-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .history-btn {
+            padding: 8px 16px;
+            background: #ecf0f1;
+            border: 1px solid #bdc3c7;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+        }
+        .history-btn:hover {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
     </style>
 </head>
 <body>
@@ -337,6 +370,10 @@
             <button id="search-button">Search</button>
         </div>
         <div class="error-message" id="error-message"></div>
+        <div class="search-history-container" id="search-history" style="display: none;">
+            <h3>Recent Searches:</h3>
+            <div id="history-buttons"></div>
+        </div>
     </section>
     <section id="weather" class="weather-section">
         <div class="weather-card">
@@ -526,6 +563,24 @@
     function displaySearchHistory() {
         const history = getSearchHistory();
         console.log('Search History:', history);
+        const historyContainer = document.getElementById('search-history');
+        const historyButtons = document.getElementById('history-buttons');
+        if (history.length === 0) {
+            historyContainer.style.display = 'none';
+            return;
+        }
+        historyContainer.style.display = 'block';
+        historyButtons.innerHTML = '';
+        for (let i = 0; i < history.length; i++) {
+            const btn = document.createElement('button');
+            btn.textContent = history[i];
+            btn.className = 'history-btn';
+            btn.addEventListener('click', () => {
+                city.value = history[i];
+                searchbtn.click();
+            });
+            historyButtons.appendChild(btn);
+        }
     }
     function addToSearchHistory(cityName) {
         let history = getSearchHistory();
@@ -540,6 +595,7 @@
         saveSearchHistory(history);
         displaySearchHistory();
     }
+    displaySearchHistory();
 </script>
 </body>
 </html>
